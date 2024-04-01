@@ -1,0 +1,65 @@
+name: adapt_edvr_vid4_calendar
+model_type: PretrainedModel
+num_gpu: 1 
+manual_seed: 0
+
+# learning strategies
+loss: MSELoss
+learning_rate: 0.00001
+iterations: 1000
+batch_size: 4
+
+evaluate: false
+
+# test dataset
+base_dataset:
+  test:
+    name: vid4_calendar
+    type: SingleVideoTestDataset
+    dataroot_gt: ./datasets/Vid4/GT/calendar
+    dataroot_lq: ./datasets/Vid4/BIx4/calendar
+    io_backend:
+      type: disk
+
+    cache_data: false
+    num_frame: 7
+    padding: reflection_circle
+
+adapt_dataset:
+  test:
+    # pseudo dataset
+    n_seq: 7
+    patch_size: 256
+
+    padding: reflection_circle
+    min_scale: 0.8
+    max_scale: 0.95
+    name: vid4_calendar
+    type: VideoAdaptDataset
+    dataroot_base: ./datasets/initial_edvr_calendar
+    io_backend:
+      type: disk
+
+    cache_data: true
+    num_frame: 7
+    padding: reflection_circle
+
+# network structures
+network_g:
+  type: EDVR
+  num_in_ch: 3
+  num_out_ch: 3
+  num_feat: 128
+  num_frame: 7
+  deformable_groups: 8
+  num_extract_block: 5
+  num_reconstruct_block: 40
+  center_frame_idx: ~
+  hr_in: false
+  with_predeblur: false
+  with_tsa: true
+
+# path
+path:
+  pretrain_network_g: ./pretrained_models/EDVR_L_x4_SR_Vimeo90K_official-162b54e4.pth
+  strict_load_g: true
