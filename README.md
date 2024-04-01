@@ -20,3 +20,10 @@ python adapt_single_video.py -opt options/EDVR/adapt_vid4_calendar.yml
 ```
 
 Results will be saved inside the 'experiments' directory.
+
+## Acknowledgement
+
+The codes are based on: 
+- [EDVR](https://github.com/xinntao/EDVR)
+
+Thanks for open sourcing such a wonderful work!
